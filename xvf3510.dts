@@ -1,0 +1,28 @@
+/*
+ *Device Tree overlay for XMOS VocalFusion 3510
+ *Compile with: dtc -@ -H epapr -O dtb -o xvf3510.dtbo -Wno-unit_address_vs_reg xvf3510.dts
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2835";
+
+	fragment@0 {
+		target = <&i2s>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	fragment@1 {
+		target = <&sound>;
+		__overlay__ {
+			compatible = "xmos,vocalfusion-soundcard";
+			i2s-controller = <&i2s>;
+			status = "okay";
+		};
+	};
+
+};
