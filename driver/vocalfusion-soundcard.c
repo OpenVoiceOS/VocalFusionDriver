@@ -101,8 +101,8 @@ static struct platform_driver vocalfusion_soundcard_driver = {
 	.remove = vocalfusion_soundcard_remove,
 };
 
-module_platform_driver(example_soundcard_driver);
+module_platform_driver(vocalfusion_soundcard_driver);
 MODULE_DESCRIPTION("XMOS VocalFusion I2S Driver");
 MODULE_AUTHOR("OpenVoiceOS");
 MODULE_LICENSE("GPL v2");
-MODULE_ALIAS("platform:example-soundcard");
+MODULE_ALIAS("platform:vocalfusion-soundcard");
