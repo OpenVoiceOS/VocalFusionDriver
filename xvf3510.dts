@@ -25,8 +25,7 @@
 			
 			clocks = <&clocks 38>;
 			clock-names = "mclk";
-			assigned-clocks = <&clocks 38>;
-			assigned-clock-rates = <24576000>;
+			clock-frequency = <24576000>;
 			
 			pinctrl-names = "default";
 			pinctrl-0 = <&xvf_clk_pin &xvf_reset &xvf_power>;

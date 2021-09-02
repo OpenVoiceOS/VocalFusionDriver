@@ -56,6 +56,20 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 	const char *dmaengine = "bcm2708-dmaengine"; //module name
 	int ret;
 
+	mclk = devm_clk_get(&pdev->dev, NULL);
+	
+	if (of_property_read_u32(dev->of_node, "clock-frequency", &rate))
+		return NULL;
+	clk_set_rate(mclk, rate);
+	clk_prepare_enable(mclk);
+	
+	printk(KERN_ALERT "GPIO4_CLK: %lu Hz\n", clk_get_rate(mclk));
+	parent_clk = clk_get_parent(mclk);
+	if (!(IS_ERR(parent_clk))) {
+		printk(KERN_ALERT "Parent clock name: %s\n", __clk_get_name(parent_clk));
+		printk(KERN_ALERT "Parent clock rate: %lu Hz\n", clk_get_rate(parent_clk));
+	}
+
 	ret = request_module(dmaengine);
 	pr_alert("request module load '%s': %d\n",dmaengine, ret);
 	ret = platform_device_register(&snd_rpi_simple_card_device);
@@ -66,6 +80,7 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 static int vocalfusion_soundcard_remove(struct platform_device *pdev)
 {
 	platform_device_unregister(&snd_rpi_simple_card_device);
+	clk_disable_unprepare(pp->clk);
 	return 0;
 }
 
