@@ -22,7 +22,36 @@
 			compatible = "xmos,vocalfusion-soundcard";
 			i2s-controller = <&i2s>;
 			status = "okay";
+			
+			clocks = <&clocks 38>;
+			clock-names = "mclk";
+			assigned-clocks = <&clocks 38>;
+			assigned-clock-rates = <24576000>;
+			
+			pinctrl-names = "default";
+			pinctrl-0 = <&xvf_clk_pin &xvf_reset &xvf_power>;
 		};
 	};
 
+	fragment@2 {
+		target = <&gpio>;
+		__overlay__ {
+			xvf_clk_pin: xvf_clk_pin {
+				brcm,pins = <4>;
+				brcm,function = <4>;
+			};
+			
+			xvf_reset: xvf_reset {
+				brcm,pins = <27>;
+				brcm,function = <1>;
+				brcm,pull = <1>;
+            };
+			
+			xvf_power: xvf_power {
+				brcm,pins = <16>;
+				brcm,function = <1>;
+				brcm,pull = <1>;
+            };
+		};
+	};
 };
