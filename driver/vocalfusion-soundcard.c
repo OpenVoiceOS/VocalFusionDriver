@@ -1,18 +1,14 @@
 /*
  * =====================================================================================
  *
- *    Description:  XMOS VocalFusion 3510 soundcard driver - based on simple loader
+ *    Description:  XMOS VocalFusion soundcard driver - based on simple loader
  *
- *        Version:  0.1.0
- *        Created:  2021-09-01
- *       Revision:  none
- *       Compiler:  gcc
- *
- *           Mods:  Peter Steenbergen (p.steenbergen@j1nx.nl)
+ *     Conversion:  Peter Steenbergen (p.steenbergen@j1nx.nl)
  *    Orig Author:  Huan Truong (htruong@tnhh.net), originally written by Paul Creaser
  *
  * =====================================================================================
  */
+#include <linux/clk.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/kmod.h>
@@ -26,7 +22,7 @@ void device_release_callback(struct device *dev) { /* do nothing */ };
 #define SND_SOC_DAIFMT_CBS_FLAG SND_SOC_DAIFMT_CBS_CFS
 
 static struct asoc_simple_card_info snd_rpi_simple_card_info = {
-	.card = "snd_rpi_simple_card", // -> snd_soc_card.name
+	.card = "snd_xmos_vocalfusion_card", // -> snd_soc_card.name
 	.name = "simple-card_codec_link", // -> snd_soc_dai_link.name
 	.codec = "snd-soc-dummy", // -> snd_soc_dai_link.codec_name
 	.platform = CARD_PLATFORM_STR,
