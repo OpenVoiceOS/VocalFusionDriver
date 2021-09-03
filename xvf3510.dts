@@ -19,7 +19,7 @@
 	fragment@1 {
 		target = <&sound>;
 		__overlay__ {
-			compatible = "xmos,vocalfusion-soundcard";
+			compatible = "vocalfusion-soundcard";
 			i2s-controller = <&i2s>;
 			status = "okay";
 			

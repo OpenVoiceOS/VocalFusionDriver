@@ -89,7 +89,7 @@ static int vocalfusion_soundcard_remove(struct platform_device *pdev)
 }
 
 static const struct of_device_id vocalfusion_soundcard_of_match[] = {
-	{ .compatible = "xmos,vocalfusion-soundcard", },
+	{ .compatible = "vocalfusion-soundcard", },
 	{},
 };
 
