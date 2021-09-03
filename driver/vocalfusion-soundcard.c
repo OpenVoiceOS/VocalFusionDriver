@@ -64,13 +64,8 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 	clk_set_rate(mclk, rate);
 	clk_prepare_enable(mclk);
 	
-	printk(KERN_ALERT "GPIO4_CLK: %lu Hz\n", clk_get_rate(mclk));
-	parent_clk = clk_get_parent(mclk);
-	if (!(IS_ERR(parent_clk))) {
-		printk(KERN_ALERT "Parent clock name: %s\n", __clk_get_name(parent_clk));
-		printk(KERN_ALERT "Parent clock rate: %lu Hz\n", clk_get_rate(parent_clk));
-	}
-
+	pr_alert("mclk at gpio4 set to: %lu Hz\n", clk_get_rate(mclk));
+	
 	ret = request_module(dmaengine);
 	pr_alert("request module load '%s': %d\n",dmaengine, ret);
 	ret = platform_device_register(&snd_rpi_simple_card_device);
