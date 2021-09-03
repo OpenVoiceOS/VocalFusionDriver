@@ -16,6 +16,7 @@
 #include <linux/platform_device.h>
 #include <sound/simple_card.h>
 #include <linux/delay.h>
+#include <linux/gpio.h>
 
 void device_release_callback(struct device *dev) { /* do nothing */ };
 
@@ -54,7 +55,6 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 {
 	const char *dmaengine = "bcm2708-dmaengine"; //module name
 	struct clk *mclk;
-	struct clk *parent_clk;
 	struct device *dev = &pdev->dev;
 	int rate;
 	int ret;
