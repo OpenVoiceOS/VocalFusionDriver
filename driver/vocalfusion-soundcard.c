@@ -9,6 +9,7 @@
  * =====================================================================================
  */
 #include <linux/clk.h>
+#include <linux/clk-provider.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/kmod.h>
@@ -50,12 +51,16 @@ static struct platform_device snd_rpi_simple_card_device = {
 static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 {
 	const char *dmaengine = "bcm2708-dmaengine"; //module name
+	struct clk *mclk;
+	struct clk *parent_clk;
+	struct device *dev = &pdev->dev;
+	unsigned long rate;
 	int ret;
-
+	
 	mclk = devm_clk_get(&pdev->dev, NULL);
 	
 	if (of_property_read_u32(dev->of_node, "clock-frequency", &rate))
-		return NULL;
+		return 0;
 	clk_set_rate(mclk, rate);
 	clk_prepare_enable(mclk);
 	
@@ -75,8 +80,11 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 
 static int vocalfusion_soundcard_remove(struct platform_device *pdev)
 {
+	struct clk *mclk;
+	mclk = devm_clk_get(&pdev->dev, NULL);
+	clk_disable_unprepare(mclk);
+	
 	platform_device_unregister(&snd_rpi_simple_card_device);
-	clk_disable_unprepare(pp->clk);
 	return 0;
 }
 
