@@ -54,7 +54,7 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 	struct clk *mclk;
 	struct clk *parent_clk;
 	struct device *dev = &pdev->dev;
-	unsigned long rate;
+	int rate;
 	int ret;
 	
 	mclk = devm_clk_get(&pdev->dev, NULL);
