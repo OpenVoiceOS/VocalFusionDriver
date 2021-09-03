@@ -21,6 +21,8 @@ void device_release_callback(struct device *dev) { /* do nothing */ };
 
 #define CARD_PLATFORM_STR   "fe203000.i2s"
 #define SND_SOC_DAIFMT_CBS_FLAG SND_SOC_DAIFMT_CBS_CFS
+#define PWR_GPIO_PIN	16
+#define RST_GPIO_PIN	27
 
 static struct asoc_simple_card_info snd_rpi_simple_card_info = {
 	.card = "snd_xmos_vocalfusion_card", // -> snd_soc_card.name
@@ -70,6 +72,13 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 	pr_alert("request module load '%s': %d\n",dmaengine, ret);
 	ret = platform_device_register(&snd_rpi_simple_card_device);
 	pr_alert("register platform device '%s': %d\n",snd_rpi_simple_card_device.name, ret);
+	
+	gpio_direction_output(PWR_GPIO_PIN, 1);
+	gpio_direction_output(RST_GPIO_PIN, 1);
+	mdelay(1);
+	gpio_set_value(PWR_GPIO_PIN, 1);
+	gpio_set_value(RST_GPIO_PIN, 1);
+	mdelay(1);
 	return 0;
 }
 

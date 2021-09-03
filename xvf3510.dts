@@ -28,7 +28,7 @@
 			clock-frequency = <24576000>;
 			
 			pinctrl-names = "default";
-			pinctrl-0 = <&xvf_clk_pin &xvf_reset &xvf_power>;
+			pinctrl-0 = <&xvf_clk_pin>;
 		};
 	};
 
@@ -39,18 +39,6 @@
 				brcm,pins = <4>;
 				brcm,function = <4>;
 			};
-			
-			xvf_reset: xvf_reset {
-				brcm,pins = <27>;
-				brcm,function = <1>;
-				brcm,pull = <1>;
-            };
-			
-			xvf_power: xvf_power {
-				brcm,pins = <16>;
-				brcm,function = <1>;
-				brcm,pull = <1>;
-            };
 		};
 	};
 };
