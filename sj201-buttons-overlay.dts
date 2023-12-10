@@ -1,0 +1,57 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+
+    fragment@0 {
+        target = <&gpio>;
+        __overlay__ {
+            sj201_key_pins: sj201_key_pins {
+                brcm,pins = <22 23 24 25>;     /* gpios 22-24 are the momentary switches; 25 is MuteMic SW connected to 3.3v or GND */
+                brcm,function = <0>; /* input mode */
+                brcm,pull = <0>;     /* pull up/down disabled */
+            };
+        };
+    };
+
+    fragment@1 {
+        target-path = "/soc";
+            __overlay__ {
+                sj201_buttons: sj201_buttons {
+                    compatible = "gpio-keys";
+                    // #address-cells = <1>;
+                    // #size-cells = <0>;
+                    pinctrl-names = "default";
+                    pinctrl-0 = <&sj201_key_pins>;
+                    status = "okay";
+                    debounce-interval = <50>;
+
+                    button_volume_up: button@22 {
+                        gpios = <&gpio 22 1>;
+                        linux,code = <115>; // KEY_VOLUMEUP
+                        label = "Volume Up";
+                    };
+
+                    button_volume_down: button@23 {
+                        gpios = <&gpio 23 1>;
+                        linux,code = <114>; // KEY_VOLUMEDOWN
+                        label = "Volume Down";
+                    };
+
+                    button_wake_up: button@24 {
+                        gpios = <&gpio 24 1>;
+                        linux,code = <143>; // KEY_WAKEUP
+                        label = "Wake Up";
+                        gpio-key,wakeup;
+                    };
+
+                    switch_mic_mute: button@25 {
+                        gpios = <&gpio 25 0>;
+                        linux,code = <113>; // KEY_MUTE
+                        label = "Microphone Mute";
+                    };
+            };
+        };
+    };
+};
