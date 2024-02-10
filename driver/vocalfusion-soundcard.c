@@ -73,8 +73,8 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 	ret = platform_device_register(&snd_rpi_simple_card_device);
 	pr_alert("register platform device '%s': %d\n",snd_rpi_simple_card_device.name, ret);
 
-	gpiod_set_value_cansleep(PWR_GPIO_PIN, 1);
-	gpiod_set_value_cansleep(RST_GPIO_PIN, 1);
+	gpiod_direction_output(PWR_GPIO_PIN, 1);
+	gpiod_direction_output(RST_GPIO_PIN, 1);
 	mdelay(1);
 	gpiod_set_value(PWR_GPIO_PIN, 1);
 	gpiod_set_value(RST_GPIO_PIN, 1);
