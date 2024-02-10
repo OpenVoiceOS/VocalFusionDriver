@@ -29,6 +29,10 @@
 			
 			pinctrl-names = "default";
 			pinctrl-0 = <&xvf_clk_pin>;
+
+			// GPIO properties
+			pwr-gpio = <&gpio 16 0>; // GPIO 16, active high
+			rst-gpio = <&gpio 27 0>; // GPIO 27, active high
 		};
 	};
 
@@ -38,6 +42,11 @@
 			xvf_clk_pin: xvf_clk_pin {
 				brcm,pins = <4>;
 				brcm,function = <4>;
+			};
+			xvf_ctrl_pins: xvf_ctrl_pins {
+				brcm,pins = <16 27>;
+				brcm,function = <1 1>; // Set as output
+				// Assuming active high, no pull-up/down needed
 			};
 		};
 	};
