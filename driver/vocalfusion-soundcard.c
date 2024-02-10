@@ -16,7 +16,7 @@
 #include <linux/platform_device.h>
 #include <sound/simple_card.h>
 #include <linux/delay.h>
-#include <linux/gpio.h>
+#include <linux/gpio/consumer.h>
 
 void device_release_callback(struct device *dev) { /* do nothing */ };
 
@@ -58,26 +58,26 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	int rate;
 	int ret;
-	
+
 	mclk = devm_clk_get(&pdev->dev, NULL);
-	
+
 	if (of_property_read_u32(dev->of_node, "clock-frequency", &rate))
 		return 0;
 	clk_set_rate(mclk, rate);
 	clk_prepare_enable(mclk);
-	
+
 	pr_alert("mclk at gpio4 set to: %lu Hz\n", clk_get_rate(mclk));
-	
+
 	ret = request_module(dmaengine);
 	pr_alert("request module load '%s': %d\n",dmaengine, ret);
 	ret = platform_device_register(&snd_rpi_simple_card_device);
 	pr_alert("register platform device '%s': %d\n",snd_rpi_simple_card_device.name, ret);
-	
-	gpio_direction_output(PWR_GPIO_PIN, 1);
-	gpio_direction_output(RST_GPIO_PIN, 1);
+
+	gpiod_set_value_cansleep(PWR_GPIO_PIN, 1);
+	gpiod_set_value_cansleep(RST_GPIO_PIN, 1);
 	mdelay(1);
-	gpio_set_value(PWR_GPIO_PIN, 1);
-	gpio_set_value(RST_GPIO_PIN, 1);
+	gpiod_set_value(PWR_GPIO_PIN, 1);
+	gpiod_set_value(RST_GPIO_PIN, 1);
 	mdelay(1);
 	return 0;
 }
@@ -87,7 +87,7 @@ static int vocalfusion_soundcard_remove(struct platform_device *pdev)
 	struct clk *mclk;
 	mclk = devm_clk_get(&pdev->dev, NULL);
 	clk_disable_unprepare(mclk);
-	
+
 	platform_device_unregister(&snd_rpi_simple_card_device);
 	return 0;
 }
