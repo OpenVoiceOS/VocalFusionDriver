@@ -1,0 +1,89 @@
+/*
+ * Device Tree Overlay for SJ-201 Rev6&10 - XMOS VocalFusion 3510-INT
+ * This DTO is designed to configure the necessary hardware interfaces and settings
+ * for the SJ-201 board, which utilizes an I2S interface for audio data,
+ * and requires specific GPIO pins for power and reset control.
+ * Compile with: dtc -@ -H epapr -O dtb -o sj201-pi5.dtbo -Wno-unit_address_vs_reg sj201-pi5.dts
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2835";
+
+	fragment@0 {
+		target = <&i2s_clk_consumer>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	fragment@1 {
+        target-path = "/";
+        __overlay__ {
+            card_codec: card-codec {
+                #sound-dai-cells = <0>;
+                compatible = "dmic-codec";
+                status = "okay";
+            };
+        };
+	};
+
+	fragment@2 {
+		target = <&sound>;
+        __overlay__ {
+            compatible = "simple-audio-card";
+
+            simple-audio-card,format = "i2s";
+            simple-audio-card,name = "sj201";
+            simple-audio-card,bitclock-master = <&dailink0_master>;
+            simple-audio-card,frame-master = <&dailink0_master>;
+            
+			status = "okay";
+            
+			simple-audio-card,cpu {
+                sound-dai = <&i2s_clk_consumer>;
+            };
+            
+			dailink0_master: simple-audio-card,codec {
+                sound-dai = <&card_codec>;
+            };
+        };
+	};
+
+	fragment@3 {
+		target-path = "/";
+		__overlay__ {
+			vocalfusion_soundcard_ctrl: vocalfusion-soundcard {
+				compatible = "vocalfusion-soundcard";
+				status = "okay";
+				
+				clocks = <&rp1_clocks 33>; // RPI 5
+				clock-names = "mclk";
+				clock-frequency = <24576000>;  // 24.576 MHz
+				
+				pinctrl-names = "default";
+				pinctrl-0 = <&xvf_clk_pin &xvf_ctrl_pins>;
+
+				// Add GPIO properties here
+				pwr-gpio = <&rp1_gpio 16 0>; // GPIO 16, active high
+				rst-gpio = <&rp1_gpio 27 0>; // GPIO 27, active high
+			};
+		};
+	};
+
+	fragment@4 {
+		target = <&rp1_gpio>;
+		__overlay__ {
+			xvf_clk_pin: xvf_clk_pin {
+				brcm,pins = <4>;
+				brcm,function = <4>; // Set as ALT0 (GPCLK0)
+			};
+			xvf_ctrl_pins: xvf_ctrl_pins {
+				brcm,pins = <16 27>;
+				brcm,function = <1 1>; // Set as output
+			};
+		};
+	};
+};
