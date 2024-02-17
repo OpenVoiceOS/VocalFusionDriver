@@ -66,13 +66,19 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev) {
         dev_err(dev, "Failed to get PWR GPIO: %ld\n", PTR_ERR(pwr_gpio));
         return PTR_ERR(pwr_gpio);
     }
-
+    else {
+        gpiod_set_value(pwr_gpio, 1);
+    }
+    msleep(1);
     rst_gpio = devm_gpiod_get(dev, "rst", GPIOD_OUT_HIGH);
     if (IS_ERR(rst_gpio)) {
         dev_err(dev, "Failed to get RST GPIO: %ld\n", PTR_ERR(rst_gpio));
         return PTR_ERR(rst_gpio);
     }
-
+    else {
+        gpiod_set_value(rst_gpio, 1);
+    }
+    msleep(1);
     // Release the GPIOs so they can be controlled from userspace
     devm_gpiod_put(&pdev->dev, pwr_gpio);
     devm_gpiod_put(&pdev->dev, rst_gpio);
