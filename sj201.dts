@@ -15,7 +15,7 @@
 / {
 	compatible = "brcm,bcm2835";
 
-	// Fragment 0: Enables the I2S clock producer
+	/* Enables the I2S clock producer */
 	fragment@0 {
 		target = <&i2s_clk_producer>;
 		__overlay__ {
@@ -23,7 +23,7 @@
 		};
 	};
 
-	// Fragment 1: Configures the simple-audio-card for SJ-201
+	/* Configures the simple-audio-card for SJ-201 */
 	fragment@1 {
 		target = <&sound>;
 		__overlay__ {
@@ -65,7 +65,7 @@
 		};
 	};
 
-	// Fragment 2: Configures vocalfusion soundcard control
+	/* Configures vocalfusion soundcard control */
 	fragment@2 {
 		target-path = "/";
 		__overlay__ {
@@ -107,7 +107,7 @@
 		};
 	};
 
-	// Fragment 3: Configures GPIO pins for the clock and control
+	/* Configures GPIO pins for the clock and control */
 	fragment@3 {
 		target = <&gpio>;
 		__overlay__ {

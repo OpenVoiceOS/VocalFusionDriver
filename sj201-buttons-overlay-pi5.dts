@@ -1,5 +1,5 @@
 /*
- * Device Tree Overlay for SJ-201 Rev6&10 - XMOS VocalFusion 3510-INT
+ * Device Tree Button Overlay for SJ-201 Rev6&10 - XMOS VocalFusion 3510-INT
  *
  * This DTO is specifically designed to configure the GPIO pins for button inputs
  * on the SJ-201 board, facilitating user interactions through physical buttons.
@@ -8,7 +8,7 @@
  *
  * Instructions:
  * Compile this DTO with the following command:
- * dtc -@ -H epapr -O dtb -o sj201-buttons-overlay.dtbo -Wno-unit_address_vs_reg sj201-buttons-overlay.dts
+ * dtc -@ -H epapr -O dtb -o sj201-buttons-overlay-pi5.dtbo -Wno-unit_address_vs_reg sj201-buttons-overlay-pi5.dts
  */
 
 /dts-v1/;
@@ -19,7 +19,7 @@
 
     /* Configure GPIO pins for SJ201 keys */
     fragment@0 {
-        target = <&gpio>;
+        target = <&rp1_gpio>;
         __overlay__ {
             sj201_key_pins: sj201_key_pins {
                 /* GPIOs 22-24 are configured as momentary switches;
@@ -44,21 +44,21 @@
 
                 /* Volume Up Button */
                 button_volume_up: button@22 {
-                    gpios = <&gpio 22 1>; // GPIO 22, active high
+                    gpios = <&rp1_gpio 22 1>; // GPIO 22, active high
                     linux,code = <115>; // KEY_VOLUMEUP to increase volume
                     label = "Volume Up"; // Descriptive label
                 };
 
                 /* Volume Down Button */
                 button_volume_down: button@23 {
-                    gpios = <&gpio 23 1>; // GPIO 23, active high
+                    gpios = <&rp1_gpio 23 1>; // GPIO 23, active high
                     linux,code = <114>; // KEY_VOLUMEDOWN to decrease volume
                     label = "Volume Down"; // Descriptive label
                 };
 
                 /* Wake Up Button */
                 button_wake_up: button@24 {
-                    gpios = <&gpio 24 1>; // GPIO 24, active high
+                    gpios = <&rp1_gpio 24 1>; // GPIO 24, active high
                     linux,code = <143>; // KEY_WAKEUP for waking up the system
                     label = "Wake Up"; // Descriptive label
                     gpio-key,wakeup; // Enable this button to wake up the system
@@ -66,7 +66,7 @@
 
                 /* Microphone Mute Switch */
                 switch_mic_mute: button@25 {
-                    gpios = <&gpio 25 0>; // GPIO 25, active low
+                    gpios = <&rp1_gpio 25 0>; // GPIO 25, active low
                     linux,code = <113>; // KEY_MUTE to mute the microphone
                     label = "Microphone Mute"; // Descriptive label
                 };
