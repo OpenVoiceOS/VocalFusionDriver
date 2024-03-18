@@ -1,10 +1,10 @@
 /*
  * =====================================================================================
  *
- *    Description:  XMOS VocalFusion soundcard driver - based on simple loader
+ * Description: XMOS VocalFusion soundcard driver - based on simple loader
  *
- *     Conversion:  Peter Steenbergen (p.steenbergen@j1nx.nl)
- *    Orig Author:  Huan Truong (htruong@tnhh.net), originally written by Paul Creaser
+ * Conversion: Peter Steenbergen (p.steenbergen@j1nx.nl)
+ * Orig Author: Huan Truong (htruong@tnhh.net), originally written by Paul Creaser
  *
  * =====================================================================================
  */
@@ -58,32 +58,24 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev) {
     clk_prepare_enable(mclk);
     dev_info(dev, "mclk set to: %lu Hz\n", clk_get_rate(mclk));
 
-    // TODO: check if we really need this, can be configured in DTS
-
     // Configure power and reset GPIOs
     pwr_gpio = devm_gpiod_get(dev, "pwr", GPIOD_OUT_HIGH);
     if (IS_ERR(pwr_gpio)) {
         dev_err(dev, "Failed to get PWR GPIO: %ld\n", PTR_ERR(pwr_gpio));
         return PTR_ERR(pwr_gpio);
     }
-    else {
-        gpiod_set_value(pwr_gpio, 1);
-    }
-    msleep(1);
+
     rst_gpio = devm_gpiod_get(dev, "rst", GPIOD_OUT_HIGH);
     if (IS_ERR(rst_gpio)) {
         dev_err(dev, "Failed to get RST GPIO: %ld\n", PTR_ERR(rst_gpio));
         return PTR_ERR(rst_gpio);
     }
-    else {
-        gpiod_set_value(rst_gpio, 1);
-    }
-    msleep(1);
-    // Release the GPIOs so they can be controlled from userspace
-    devm_gpiod_put(&pdev->dev, pwr_gpio);
-    devm_gpiod_put(&pdev->dev, rst_gpio);
 
-    pr_alert("VocalFusion soundcard module loaded\n");
+    // Release the GPIOs so they can be controlled from userspace
+    devm_gpiod_put(dev, pwr_gpio);
+    devm_gpiod_put(dev, rst_gpio);
+
+    pr_info("VocalFusion soundcard module loaded\n");
     return 0;
 }
 
@@ -93,14 +85,16 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev) {
  */
 static int vocalfusion_soundcard_remove(struct platform_device *pdev) {
     struct clk *mclk = devm_clk_get(&pdev->dev, NULL); // Re-obtain the clock
-    clk_disable_unprepare(mclk); // Disable the clock
+    if (!IS_ERR(mclk)) {
+        clk_disable_unprepare(mclk); // Disable the clock
+    }
 
-    pr_alert("VocalFusion soundcard module unloaded\n");
+    pr_info("VocalFusion soundcard module unloaded\n");
     return 0;
 }
 
-static
-const struct of_device_id vocalfusion_soundcard_of_match[] = {
+// Device compatibility table
+static const struct of_device_id vocalfusion_soundcard_of_match[] = {
     { .compatible = "vocalfusion-soundcard", },
     {},
 };
