@@ -48,7 +48,7 @@
 
                     switch_mic_mute: button@25 {
                         gpios = <&gpio 25 0>;
-                        linux,code = <113>; // KEY_MUTE
+                        linux,code = <248>; // KEY_MICMUTE
                         label = "Microphone Mute";
                     };
             };
