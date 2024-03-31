@@ -34,42 +34,41 @@
     /* Define GPIO keys for volume control, wake-up, and microphone mute */
     fragment@1 {
         target-path = "/soc";
-        __overlay__ {
-            sj201_buttons: sj201_buttons {
-                compatible = "gpio-keys"; // Define as GPIO keys
-                pinctrl-names = "default"; // Use default pin control state
-                pinctrl-0 = <&sj201_key_pins>; // Reference the pin configuration from fragment 0
-                status = "okay"; // Enable this node
-                debounce-interval = <50>; // Set debounce interval to 50ms for all buttons
 
-                /* Volume Up Button */
-                button_volume_up: button@22 {
-                    gpios = <&gpio 22 1>; // GPIO 22, active high
-                    linux,code = <115>; // KEY_VOLUMEUP to increase volume
-                    label = "Volume Up"; // Descriptive label
-                };
+            __overlay__ {
+                sj201_buttons: sj201_buttons {
+                    compatible = "gpio-keys";
+                    // #address-cells = <1>;
+                    // #size-cells = <0>;
+                    pinctrl-names = "default";
+                    pinctrl-0 = <&sj201_key_pins>;
+                    status = "okay";
+                    debounce-interval = <50>;
 
-                /* Volume Down Button */
-                button_volume_down: button@23 {
-                    gpios = <&gpio 23 1>; // GPIO 23, active high
-                    linux,code = <114>; // KEY_VOLUMEDOWN to decrease volume
-                    label = "Volume Down"; // Descriptive label
-                };
+                    button_volume_up: button@22 {
+                        gpios = <&gpio 22 1>;
+                        linux,code = <115>; // KEY_VOLUMEUP
+                        label = "Volume Up";
+                    };
 
-                /* Wake Up Button */
-                button_wake_up: button@24 {
-                    gpios = <&gpio 24 1>; // GPIO 24, active high
-                    linux,code = <143>; // KEY_WAKEUP for waking up the system
-                    label = "Wake Up"; // Descriptive label
-                    gpio-key,wakeup; // Enable this button to wake up the system
-                };
+                    button_volume_down: button@23 {
+                        gpios = <&gpio 23 1>;
+                        linux,code = <114>; // KEY_VOLUMEDOWN
+                        label = "Volume Down";
+                    };
 
-                /* Microphone Mute Switch */
-                switch_mic_mute: button@25 {
-                    gpios = <&gpio 25 0>; // GPIO 25, active low
-                    linux,code = <113>; // KEY_MUTE to mute the microphone
-                    label = "Microphone Mute"; // Descriptive label
-                };
+                    button_wake_up: button@24 {
+                        gpios = <&gpio 24 1>;
+                        linux,code = <582>; // KEY_VOICECOMMAND
+                        label = "Wake Up";
+                        gpio-key,wakeup;
+                    };
+
+                    switch_mic_mute: button@25 {
+                        gpios = <&gpio 25 0>;
+                        linux,code = <248>; // KEY_MICMUTE
+                        label = "Microphone Mute";
+                    };
             };
         };
     };
