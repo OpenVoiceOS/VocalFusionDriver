@@ -11,7 +11,7 @@
  *
  * Instructions:
  * Compile this DTO with the following command:
- * dtc -@ -H epapr -O dtb -o sj201-rev10-pwm-fan-overlay.dtbo -Wno-unit_address_vs_reg sj201-rev10-pwm-fan-overlay.dts
+ * dtc -@ -H epapr -O dtb -o sj201-rev10-pwm-fan-overlay-pi5.dtbo -Wno-unit_address_vs_reg sj201-rev10-pwm-fan-overlay-pi5.dts
  */
 
 /dts-v1/;
@@ -22,7 +22,7 @@
 
     /* Configure the GPIO pin for PWM output */
     fragment@0 {
-        target = <&gpio>;
+        target = <&rp1_gpio>;
         __overlay__ {
             pwm_pins: pwm_pins {
                 brcm,pins = <13>;         // GPIO pin 13 for PWM output
@@ -34,7 +34,7 @@
 
     /* Configure the PWM channel */
     fragment@1 {
-        target = <&pwm>;
+        target = <&rp1_gpio>;
         __overlay__ {
             pinctrl-names = "default";
             pinctrl-0 = <&pwm_pins>;              // Use the configured GPIO pin

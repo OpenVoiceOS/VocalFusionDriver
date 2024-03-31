@@ -1,22 +1,40 @@
+/*
+ * Device Tree Overlay for SJ-201 Rev6&10 - XMOS VocalFusion 3510-INT
+ *
+ * This DTO is specifically designed to configure the GPIO pins for button inputs
+ * on the SJ-201 board, facilitating user interactions through physical buttons.
+ * These configurations include setting up GPIO pins for volume control,
+ * wake-up, and microphone mute functionalities.
+ *
+ * Instructions:
+ * Compile this DTO with the following command:
+ * dtc -@ -H epapr -O dtb -o sj201-buttons-overlay.dtbo -Wno-unit_address_vs_reg sj201-buttons-overlay.dts
+ */
+
 /dts-v1/;
 /plugin/;
 
 / {
-    compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+    compatible = "brcm,bcm2835";
 
+    /* Configure GPIO pins for SJ201 keys */
     fragment@0 {
         target = <&gpio>;
         __overlay__ {
             sj201_key_pins: sj201_key_pins {
-                brcm,pins = <22 23 24 25>;     /* gpios 22-24 are the momentary switches; 25 is MuteMic SW connected to 3.3v or GND */
-                brcm,function = <0>; /* input mode */
-                brcm,pull = <0>;     /* pull up/down disabled */
+                /* GPIOs 22-24 are configured as momentary switches;
+                   GPIO 25 is configured for the Microphone Mute switch. */
+                brcm,pins = <22 23 24 25>; // Specify the GPIO pins to configure
+                brcm,function = <0>; // Set pins to input mode
+                brcm,pull = <0>;     // Disable pull-up/down for these pins
             };
         };
     };
 
+    /* Define GPIO keys for volume control, wake-up, and microphone mute */
     fragment@1 {
         target-path = "/soc";
+
             __overlay__ {
                 sj201_buttons: sj201_buttons {
                     compatible = "gpio-keys";
