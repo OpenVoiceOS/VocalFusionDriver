@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+DKMS_NAME=vocalfusion-soundcard
+DKMS_PACKAGE_NAME=vocalfusion-soundcard
+DKMS_VERSION=0.0.2
+case "$1" in
+  configure)
+    if [ -x /usr/lib/dkms/common.postinst ]; then
+      /usr/lib/dkms/common.postinst $DKMS_NAME $DKMS_VERSION /usr/share/$DKMS_PACKAGE_NAME "" $2
+    else
+      echo "ERROR: DKMS version is too old and $DKMS_PACKAGE_NAME was not"
+      echo "built with legacy DKMS support."
+      echo "You must either rebuild $DKMS_PACKAGE_NAME with legacy postinst"
+      echo "support or upgrade DKMS to a more current version."
+      exit 1
+    fi
+  ;;
+esac
+exit 0
