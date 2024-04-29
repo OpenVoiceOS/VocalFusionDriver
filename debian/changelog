@@ -1,0 +1,5 @@
+vocalfusion-soundcard-dkms (0.0.2-1) unstable; urgency=medium
+
+  * Update drivers to support 6.6 kernel
+
+ -- BohdanBuinich <bohdan.buinich@gmail.com>  Mon, 18 Mar 2024 20:51:32 +0530

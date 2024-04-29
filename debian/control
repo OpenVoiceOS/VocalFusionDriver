@@ -1,0 +1,11 @@
+Source: vocalfusion-soundcard-dkms
+Section: misc
+Priority: optional
+Maintainer: Open Voice OS <contact@openvoiceos.org>
+Build-Depends: debhelper (>= 10), dkms
+Standards-Version: 3.8.1
+
+Package: vocalfusion-soundcard-dkms
+Architecture: all
+Depends: raspberrypi-kernel-headers, dkms (>= 1.95), ${misc:Depends}
+Description: Hardware device drivers for VocalFusion soundcard.
