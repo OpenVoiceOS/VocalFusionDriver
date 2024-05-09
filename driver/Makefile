@@ -1,4 +1,5 @@
-obj-m += vocalfusion-soundcard.o
+obj-m += sj201-soundcard.o
+obj-m += tas5806md.o
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 
