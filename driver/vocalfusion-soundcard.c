@@ -71,9 +71,9 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev) {
         return PTR_ERR(rst_gpio);
     }
 
-    // Release the GPIOs so they can be controlled from userspace
-    devm_gpiod_put(dev, pwr_gpio);
-    devm_gpiod_put(dev, rst_gpio);
+    // Initialise the XMOS chip
+    gpiod_set_value(pwr_gpio, 1);
+    gpiod_set_value(rst_gpio, 1);
 
     pr_info("VocalFusion soundcard module loaded\n");
     return 0;
