@@ -20,7 +20,7 @@
 
 // Forward declarations for the driver's probe and remove functions
 static int vocalfusion_soundcard_probe(struct platform_device *pdev);
-static int vocalfusion_soundcard_remove(struct platform_device *pdev);
+static void vocalfusion_soundcard_remove(struct platform_device *pdev);
 
 /*
  * Probe function - Initializes the sound card device
@@ -83,14 +83,13 @@ static int vocalfusion_soundcard_probe(struct platform_device *pdev) {
  * Remove function - Cleans up the device on removal
  * Disables and unprepares the clock
  */
-static int vocalfusion_soundcard_remove(struct platform_device *pdev) {
+static void vocalfusion_soundcard_remove(struct platform_device *pdev) {
     struct clk *mclk = devm_clk_get(&pdev->dev, NULL); // Re-obtain the clock
     if (!IS_ERR(mclk)) {
         clk_disable_unprepare(mclk); // Disable the clock
     }
 
     pr_info("VocalFusion soundcard module unloaded\n");
-    return 0;
 }
 
 // Device compatibility table
