@@ -26,7 +26,7 @@
     /* Configures the simple-audio-card for SJ-201 */
     fragment@1 {
         target = <&sound>;
-        __overlay__ {
+        sound_overlay: __overlay__ {
             compatible = "simple-audio-card";
             simple-audio-card,name = "sj201";
             status = "okay";
@@ -34,32 +34,28 @@
             // Capture link configuration
             capture_link: simple-audio-card,dai-link@0 {
                 format = "i2s";
-
                 r_cpu_dai: cpu {
                     sound-dai = <&i2s_clk_producer>;
-
-                    dai-tdm-slot-num = <2>;
+                    dai-tdm-slot-num   = <2>;
                     dai-tdm-slot-width = <32>;
                 };
-
                 r_codec_dai: codec {
-                    sound-dai = <&codec_in>;
+                    #sound-dai-cells = <0>;
+                    sound-dai = <&dmic_codec>;
                 };
             };
-            
+
             // Playback link configuration
             playback_link: simple-audio-card,dai-link@1 {
                 format = "i2s";
-
                 p_cpu_dai: cpu {
                     sound-dai = <&i2s_clk_producer>;
-
-                    dai-tdm-slot-num = <2>;
+                    dai-tdm-slot-num   = <2>;
                     dai-tdm-slot-width = <32>;
                 };
-
                 p_codec_dai: codec {
-                    sound-dai = <&codec_out>;
+                    #sound-dai-cells = <0>;
+                    sound-dai = <&tas58xx_codec>;
                 };
             };
         };
@@ -87,21 +83,11 @@
                 rst-gpio = <&gpio 27 0>; // GPIO 27, active high
             };
 
-            // SPDIF transmitter configuration
-            codec_out: spdif-transmitter {
-                #address-cells = <0>;
-                #size-cells = <0>;
+            // DMIC microphone codec configuration
+            dmic_codec: dmic-codec {
                 #sound-dai-cells = <0>;
-                compatible = "linux,spdif-dit";
-                status = "okay";
-            };
-
-            // SPDIF receiver configuration
-            codec_in: spdif-receiver {
-                #address-cells = <0>;
-                #size-cells = <0>;
-                #sound-dai-cells = <0>;
-                compatible = "linux,spdif-dir";
+                compatible = "dmic-codec";
+                num-channels = <2>;
                 status = "okay";
             };
         };
@@ -120,6 +106,24 @@
             xvf_ctrl_pins: xvf_ctrl_pins {
                 brcm,pins = <16 27>;
                 brcm,function = <1 1>; // Set as output
+            };
+        };
+    };
+
+    fragment@4 {
+        target = <&i2c1>;
+        __overlay__ {
+            status = "okay";
+            clock-frequency = <400000>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            tas58xx_codec: tas58xx {
+                #sound-dai-cells = <0>;
+                compatible = "ti,tas5806m";
+                pvdd-supply = <&vdd_3v3_reg>;
+                reg = <0x2f>;
+                pdn-gpios = <&gpio 5 0>;
             };
         };
     };
